@@ -1,7 +1,6 @@
 "use client";
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-// import { Link } from "next-view-transitions";
-import { Logo, LogoMobile } from "./Logo";
+import {  UserButton } from "@clerk/nextjs";
+import { Logo } from "./Logo";
 import { Button, buttonVariants } from "./ui/button";
 import { Link } from "next-view-transitions";
 import { usePathname } from "next/navigation";
