@@ -9,6 +9,58 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url="file:./dev.db"
+  // provider = "postgresql"
+  // url      = env("DATABASE_URL")
+}
+
+model UserSettings{
+  userId String @id
+  currency String
+} 
+
+model Category {
+  name String
+  userId String
+  icon String
+  createdAt DateTime @default(now())
+  type String @default("income")
+
+  @@unique([name, userId,type])
+}
+model Transaction {
+  id String @id @default(uuid())
+  userId String
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now())
+  
+  category String
+  catergoryIcon String
+
+  amount Float
+  date DateTime
+  type String @default("income")
+
+}
+
+model MonthHistory {
+  day Int
+  month Int
+  year Int
+  userId String
+  income Float
+  expensse Float
+
+  @@id([day,month,year,userId])
+}
+
+model YearHistory {
+  month Int
+  year Int
+  userId String
+  income Float
+  expensse Float
+
+  @@id([month,year,userId])
 }
