@@ -19,33 +19,42 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Currency, currencies } from "@/lib/currencies";
+import { useQuery } from "@tanstack/react-query";
+import { Skeleton } from "./ui/skeleton";
+import SkeletonWrapper from "./SkeletonWrapper";
 
 export function CurrencySelector() {
   const [open, setOpen] = React.useState(false);
   const isDesktop = useMediaQuery("(min-width: 768px)");
-  const [selectedCurrency, setSelectedCurrency] = React.useState<Currency | null>(
-    null
-  );
+  const [selectedCurrency, setSelectedCurrency] =
+    React.useState<Currency | null>(null);
+
+  const userSettings = useQuery({
+    queryKey: ["userSettings"],
+    queryFn: () => fetch("/api/user-settings").then((res) => res.json()),
+  });
 
   if (isDesktop) {
     return (
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className="w-full justify-start">
-            {selectedCurrency ? (
-              <>{selectedCurrency.label}</>
-            ) : (
-              <>+ Set Currency</>
-            )}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
-          <CurrencyList
-            setOpen={setOpen}
-            setSelectedCurrency={setSelectedCurrency}
-          />
-        </PopoverContent>
-      </Popover>
+      <SkeletonWrapper isLoading={userSettings.isFetching}>
+        <Popover open={open} onOpenChange={setOpen}>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="w-full justify-start">
+              {selectedCurrency ? (
+                <>{selectedCurrency.label}</>
+              ) : (
+                <>+ Set Currency</>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-[200px] p-0" align="start">
+            <CurrencyList
+              setOpen={setOpen}
+              setSelectedCurrency={setSelectedCurrency}
+            />
+          </PopoverContent>
+        </Popover>
+      </SkeletonWrapper>
     );
   }
 
