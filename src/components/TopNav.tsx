@@ -21,7 +21,7 @@ export default function TopNav() {
 function MobileNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const items = [
-    { label: "Dashboard", href: "/dashboard" },
+    { label: "Dashboard", href: "/" },
     { label: "Transactions", href: "/transactions" },
     { label: "Manage", href: "/manage" },
   ];
@@ -62,7 +62,7 @@ function MobileNavbar() {
 
 function DesktopNavbar() {
   const items = [
-    { label: "Dashboard", href: "/dashboard" },
+    { label: "Dashboard", href: "/" },
     { label: "Transactions", href: "/transactions" },
     { label: "Manage", href: "/manage" },
   ];
