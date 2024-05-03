@@ -39,6 +39,7 @@ model Transaction {
   catergoryIcon String
 
   amount Float
+  description String
   date DateTime
   type String @default("income")
 
@@ -50,7 +51,7 @@ model MonthHistory {
   year Int
   userId String
   income Float
-  expensse Float
+  expense Float
 
   @@id([day,month,year,userId])
 }
@@ -60,7 +61,7 @@ model YearHistory {
   year Int
   userId String
   income Float
-  expensse Float
+  expense Float
 
   @@id([month,year,userId])
 }

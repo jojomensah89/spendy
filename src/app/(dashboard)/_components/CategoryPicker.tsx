@@ -22,9 +22,20 @@ import CreateCategoryDialog from "@/app/(dashboard)/_components/CreateCategoryDi
 import { cn } from "@/lib/utils";
 import { Check, ChevronsUpDown } from "lucide-react";
 
-const CategoryPicker = ({ type }: { type: TransactionType }) => {
+interface CategoryPickerProps {
+  type: TransactionType;
+  onChange: (value: string) => void;
+}
+
+const CategoryPicker = ({ type, onChange }: CategoryPickerProps) => {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  useEffect(() => {
+    if (!value) return;
+    onChange(value);
+  }, [onChange, value]);
+
   const categoriesQuery = useQuery<Category[]>({
     queryKey: ["categories", { type }],
     queryFn: () =>
@@ -80,7 +91,6 @@ const CategoryPicker = ({ type }: { type: TransactionType }) => {
             </p>
           </CommandEmpty>
           <CommandGroup>
-            {" "}
             <CommandList>
               {categoriesQuery?.data?.map((category: Category) => (
                 <CommandItem
@@ -93,7 +103,7 @@ const CategoryPicker = ({ type }: { type: TransactionType }) => {
                   <CategoryRow category={category} />
                   <Check
                     className={cn(
-                      "mr-2 w-4 h-4 opacity-0",
+                      "ml-2 w-4 h-4 opacity-0",
                       value === category.name && "opacity-100"
                     )}
                   />
