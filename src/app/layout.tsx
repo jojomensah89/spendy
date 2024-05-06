@@ -6,7 +6,6 @@ import "./globals.css";
 
 import { ViewTransitions } from "next-view-transitions";
 import Providers from "@/components/Providers";
-import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,13 +26,7 @@ export default function RootLayout({
     <ViewTransitions>
       <ClerkProvider>
         <html lang="en" suppressHydrationWarning>
-          <body
-            className={`font-sans ${inter.variable} antialiased`}
-            // style={{
-            //   colorScheme: "dark",
-            // }}
-          >
-            <Toaster richColors position="bottom-right" />
+          <body className={`font-sans ${inter.variable} antialiased`}>
             <Providers>{children}</Providers>
           </body>
         </html>

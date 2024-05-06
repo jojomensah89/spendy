@@ -5,6 +5,8 @@ import prisma from "@/lib/prisma";
 import { Button } from "@/components/ui/button";
 import CreateTransactionDialog from "./_components/CreateTransactionDialog";
 import Overview from "./_components/Overview";
+import History from "./_components/History";
+import { TransactionType } from "@/lib/types";
 async function page() {
   const user = await currentUser();
 
@@ -26,7 +28,7 @@ async function page() {
           <p className="text-3xl font-bold ">Hello, {user.firstName}👋</p>
           <div className="flex items-center gap-3">
             <CreateTransactionDialog
-              type="income"
+              type={TransactionType.income}
               trigger={
                 <Button
                   variant={"outline"}
@@ -38,7 +40,7 @@ async function page() {
             />
 
             <CreateTransactionDialog
-              type="expense"
+              type={TransactionType.expense}
               trigger={
                 <Button
                   variant={"outline"}
@@ -52,6 +54,7 @@ async function page() {
         </div>
       </div>
       <Overview userSettings={userSettings} />
+      <History userSettings={userSettings} />
     </div>
   );
 }

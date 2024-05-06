@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-
+import axios from "axios";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { Button } from "@/components/ui/button";
 import {
@@ -33,7 +33,10 @@ export function CurrencySelector() {
 
   const userSettings = useQuery<UserSettings>({
     queryKey: ["userSettings"],
-    queryFn: () => fetch("/api/user-settings").then((res) => res.json()),
+    queryFn: async () => {
+      const response = await axios.get("/api/user-settings");
+      return response.data;
+    },
   });
 
   // userSettings.isSuccess &&
@@ -56,7 +59,7 @@ export function CurrencySelector() {
 
   const mutation = useMutation({
     mutationFn: updateUserCurrency,
-    onSuccess: (data:UserSettings) => {
+    onSuccess: (data: UserSettings) => {
       toast.success("Currency updated successfully 🎉", {
         id: "update-currency",
       });

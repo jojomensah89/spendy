@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { UserSettings } from "@prisma/client";
 import { useQuery } from "@tanstack/react-query";
 import React, { useMemo } from "react";
+import axios from "axios";
 
 interface Props {
   userSettings: UserSettings;
@@ -21,13 +22,14 @@ interface Props {
 function CategoriesStats({ userSettings, from, to }: Props) {
   const statsQuery = useQuery<GetCategoriesStatsResponseType>({
     queryKey: ["overview", "stats", "categories", from, to],
-    queryFn: () =>
-      fetch(
+    queryFn: async () => {
+      const response = await axios.get(
         `/api/stats/categories?from=${DateToUTCDate(from)}&to=${DateToUTCDate(
           to
-        )}`,
-        { cache: "no-store" }
-      ).then((res) => res.json()),
+        )}`
+      );
+      return response.data;
+    },
   });
 
   const formatter = useMemo(() => {
@@ -40,14 +42,14 @@ function CategoriesStats({ userSettings, from, to }: Props) {
         <CategoriesCard
           formatter={formatter}
           stats={statsQuery?.data || []}
-          type="income"
+          type={TransactionType.income}
         />
       </SkeletonWrapper>
       <SkeletonWrapper isLoading={statsQuery.isFetching}>
         <CategoriesCard
           formatter={formatter}
           stats={statsQuery?.data || []}
-          type="expense"
+          type={TransactionType.expense}
         />
       </SkeletonWrapper>
     </div>
@@ -74,7 +76,7 @@ function CategoriesCard({
     <Card className="h-80 w-full col-span-6">
       <CardHeader>
         <CardTitle className="grid grid-flow-row justify-between gap-2 text-muted-foreground md:grid-flow-col">
-          {type === "income" ? "Incomes" : "Expenses"} by category
+          {type === TransactionType.income ? "Incomes" : "Expenses"} by category
         </CardTitle>
       </CardHeader>
       <div className="flex items-center justify-between gap-2">
@@ -86,10 +88,12 @@ function CategoriesCard({
               <span
                 className={cn(
                   "mx-1",
-                  type === "income" ? "text-emerald-500" : "text-red-500"
+                  type === TransactionType.income
+                    ? "text-emerald-500"
+                    : "text-red-500"
                 )}
               >
-                {type === "income" ? "income" : "expense"}
+                {type === TransactionType.income ? "income" : "expense"}
               </span>
               transaction
             </p>
@@ -114,9 +118,12 @@ function CategoriesCard({
                       </span>
                     </div>
                     <Progress
+                      className="h-[6px]"
                       value={percentage}
                       indicator={
-                        type === "income" ? "bg-emerald-500" : "bg-red-500"
+                        type === TransactionType.income
+                          ? "bg-emerald-500"
+                          : "bg-red-500"
                       }
                     />
                   </div>
