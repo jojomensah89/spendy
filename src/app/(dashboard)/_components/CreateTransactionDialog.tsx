@@ -86,7 +86,7 @@ const CreateTransactionDialog = ({
 
       //Invalidate the query for overview after creating transaction
       queryClient.invalidateQueries({
-        queryKey: ["overview"],
+        queryKey: ["overview", "stats"],
       });
 
       setOpen((prev: boolean) => !prev);
@@ -125,7 +125,10 @@ const CreateTransactionDialog = ({
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form className="space-y-6" onSubmit={form.handleSubmit(handleSubmit)}>
+          <form
+            className="space-y-6"
+            onSubmit={form.handleSubmit(handleSubmit)}
+          >
             <FormField
               control={form.control}
               name="description"
@@ -208,7 +211,10 @@ const CreateTransactionDialog = ({
                         <Calendar
                           mode={"single"}
                           selected={field.value}
-                          onSelect={field.onChange}
+                          onSelect={(date) => {
+                            if (!date) return;
+                            field.onChange(date);
+                          }}
                           initialFocus
                         />
                       </PopoverContent>
@@ -241,8 +247,8 @@ const CreateTransactionDialog = ({
             </Button>
           </DialogClose>
           <Button
-          onClick={form.handleSubmit(handleSubmit)}
-          disabled={isPending}
+            onClick={form.handleSubmit(handleSubmit)}
+            disabled={isPending}
           >
             {isPending ? <Loader2 className="animate-spin" /> : "Create"}
           </Button>
