@@ -18,6 +18,7 @@ Spendy is a simple, fast, and secure way to track your spending.
 
 ## Todo
 
+* Use Supabase for DB.
 * Remove react-countup and replace with magic UI counter.
 * Fix query client and query invalidation glitches.
 * Optimizatios for SSR SSG and Client pages.
