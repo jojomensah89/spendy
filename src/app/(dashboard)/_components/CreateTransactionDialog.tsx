@@ -88,7 +88,7 @@ const CreateTransactionDialog = ({
 
       //Invalidate the query for overview after creating transaction
       queryClient.invalidateQueries({
-        queryKey: ["overview", "stats"],
+        queryKey: ["overview","stats","history"],
         refetchType: "all",
       });
 

@@ -31,7 +31,20 @@ import { TransactionType } from "@/lib/types";
 import { DataTableFacetedFilter } from "@/components/table-data/FacetedFilters";
 import { DataTableViewOptions } from "@/components/table-data/CoulmnToggle";
 import { download, generateCsv, mkConfig } from "export-to-csv";
-import { DownloadIcon } from "lucide-react";
+import {
+  DownloadIcon,
+  MoreVertical,
+  TrashIcon,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import DeleteTransactionDialog from "./DeleteTransactionDialog";
 
 interface Props {
   from: Date;
@@ -309,5 +322,33 @@ function TransactionsTable({ from, to }: Props) {
 export default TransactionsTable;
 
 function RowActions({ transaction }: { transaction: TransactionHistoryRow }) {
-  return <div></div>;
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  return (
+    <>
+      <DeleteTransactionDialog
+        open={showDeleteDialog}
+        setOpen={setShowDeleteDialog}
+        transactionId={transaction.id}
+      />
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"ghost"} className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreVertical className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            className="flex items-center gap-2"
+            onSelect={() => setShowDeleteDialog((prev) => !prev)}
+          >
+            <TrashIcon className="h-4 w-4" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
+  );
 }

@@ -1,73 +1,64 @@
 "use client";
-
-import { Category } from "@prisma/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import React from "react";
-import { toast } from "sonner";
-import { DeleteCategory } from "../_actions/categories";
 import {
   AlertDialogTitle,
   AlertDialog,
   AlertDialogContent,
   AlertDialogHeader,
-  AlertDialogTrigger,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
-import { TransactionType } from "@/lib/types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import React from "react";
+import { DeleteTransaction } from "../_actions/deleteTransaction";
+import { toast } from "sonner";
 
-interface Props {
-  trigger: React.ReactNode;
-  category: Category;
-}
+type Props = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  transactionId: string;
+};
 
-function DeleteCategoryDialog({ trigger, category }: Props) {
-  const categoryIdentifier = `${category.name}-${category.type}`;
-
+function DeleteTransactionDialog({ open, setOpen, transactionId }: Props) {
   const queryClient = useQueryClient();
 
-  const deleteCategory = useMutation({
-    mutationFn: DeleteCategory,
+  const deleteTransaction = useMutation({
+    mutationFn: DeleteTransaction,
     onSuccess: async () => {
-      toast.success("Category deleted successfully", {
-        id: categoryIdentifier,
+      toast.success("Transaction deleted successfully", {
+        id: transactionId,
       });
 
       await queryClient.invalidateQueries({
-        queryKey: ["categories"],
+        queryKey: ["transactions", "overview", "stats", "history"],
         refetchType: "all",
       });
     },
     onError: () => {
       toast.error("Something went wrong", {
-        id: categoryIdentifier,
+        id: transactionId,
       });
     },
   });
   return (
-    <AlertDialog>
-      <AlertDialogTrigger>{trigger}</AlertDialogTrigger>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
             This action cannot be undone. Are you sure you want to delete this
-            category?
+            transaction?
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             onClick={() => {
-              toast.loading("Deleting category...", {
-                id: categoryIdentifier,
+              toast.loading("Deleting transaction...", {
+                id: transactionId,
               });
-              deleteCategory.mutate({
-                name: category.name,
-                type: category.type as TransactionType,
-              });
+              deleteTransaction.mutate(transactionId);
             }}
           >
             Continue
@@ -78,4 +69,4 @@ function DeleteCategoryDialog({ trigger, category }: Props) {
   );
 }
 
-export default DeleteCategoryDialog;
+export default DeleteTransactionDialog;
