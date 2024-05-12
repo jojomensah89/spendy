@@ -1,4 +1,5 @@
 "use server";
+import { unstable_noStore as noStore } from "next/cache";
 
 import prisma from "@/lib/prisma";
 import {
@@ -9,6 +10,8 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export async function CreateTransaction(form: CreateTransactionSchemaType) {
+  noStore();
+
   const parsedBody = CreateTransactionSchema.safeParse(form);
   if (!parsedBody.success) {
     throw new Error(parsedBody.error.message);
@@ -32,7 +35,7 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
     throw new Error("Category not found");
   }
 
-  // Create transaction in database and aggregate transactions in the date
+  // Create transaction in database and aggregate transactions in the history for month and year
   await prisma.$transaction([
     //create  new transaction
     prisma.transaction.create({
@@ -42,7 +45,7 @@ export async function CreateTransaction(form: CreateTransactionSchemaType) {
         date,
         description: description ?? "",
         category: categoryRow.name,
-        catergoryIcon: categoryRow.icon,
+        categoryIcon: categoryRow.icon,
         type,
       },
     }),

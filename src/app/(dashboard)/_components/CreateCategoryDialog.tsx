@@ -40,7 +40,7 @@ import data from "@emoji-mart/data";
 import { useTheme } from "next-themes";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { Category } from "@prisma/client";
-import { createCategory } from "../_actions/categories";
+import { CreateCategory } from "../_actions/categories";
 import { toast } from "sonner";
 
 interface Props {
@@ -59,7 +59,7 @@ function CreateCategoryDialog({ type, successCallback, trigger }: Props) {
 
   const queryClient = useQueryClient();
   const { mutate, isPending } = useMutation({
-    mutationFn: createCategory,
+    mutationFn: CreateCategory,
     onSuccess: async (data: Category) => {
       form.reset({
         name: "",

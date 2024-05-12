@@ -20,6 +20,11 @@ export const currencies = [
     label: "¥ Japanese Yen",
     locale: "ja-JP",
   },
+  {
+    value: "GHS",
+    label: "GH₵ Ghanaian Cedi",
+    locale: "en-GH",
+  },
 ];
 
 export type Currency = (typeof currencies)[0];

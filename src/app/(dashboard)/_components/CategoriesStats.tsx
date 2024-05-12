@@ -108,7 +108,7 @@ function CategoriesCard({
                   <div key={stat.category} className="flex flex-col gap-2">
                     <div className="flex items-center justify-between gap-2">
                       <span className="flex items-center text-gray-400">
-                        {stat.catergoryIcon} {stat.category}
+                        {stat.categoryIcon} {stat.category}
                         <span className="ml-2 text-xs text-muted-foreground">
                           {percentage.toFixed(0)}%
                         </span>

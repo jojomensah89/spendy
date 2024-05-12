@@ -40,6 +40,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CreateTransaction } from "../_actions/transactions";
 import { toast } from "sonner";
 import { DateToUTCDate } from "@/lib/helpers";
+import { redirect } from "next/dist/server/api-utils";
+import { revalidatePath } from "next/cache";
 
 interface CreateTransactionDialogProps {
   trigger: React.ReactNode;
@@ -87,9 +89,11 @@ const CreateTransactionDialog = ({
       //Invalidate the query for overview after creating transaction
       queryClient.invalidateQueries({
         queryKey: ["overview", "stats"],
+        refetchType: "all",
       });
 
       setOpen((prev: boolean) => !prev);
+      revalidatePath("/");
     },
   });
 
