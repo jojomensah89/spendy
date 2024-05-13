@@ -23,3 +23,4 @@ Spendy is a simple, fast, and secure way to track your spending.
 * Fix query client and query invalidation glitches.
 * Optimizatios for SSR SSG and Client pages.
 * Write tests.
+* Optimistic updates.
