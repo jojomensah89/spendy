@@ -1,6 +1,10 @@
 "use client";
 import React from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  QueryClient,
+  QueryClientProvider,
+  isServer,
+} from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import NextTopLoader from "nextjs-toploader";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -21,7 +25,7 @@ function makeQueryClient() {
 let browserQueryClient: QueryClient | undefined = undefined;
 
 function getQueryClient() {
-  if (typeof window === "undefined") {
+  if (isServer) {
     // Server: always make a new query client
     return makeQueryClient();
   } else {
@@ -33,20 +37,11 @@ function getQueryClient() {
     return browserQueryClient;
   }
 }
-function Providers({ children }: { children: React.ReactNode }) {
-  // const [queryClient] = React.useState(
-  //   () =>
-  //     new QueryClient({
-  //       defaultOptions: {
-  //         queries: {
-  //           // With SSR, we usually want to set some default staleTime
-  //           // above 0 to avoid refetching immediately on the client
-  //           staleTime: 60 * 1000,
-  //         },
-  //       },
-  //     })
-  // ); // const queryClient = new QueryClient();
-  const queryClient = getQueryClient();
+function Providers(props: { children: React.ReactNode }) {
+  const [queryClient] = React.useState(() => getQueryClient());
+
+  // const queryClient = new QueryClient();
+  // const queryClient = getQueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -57,7 +52,7 @@ function Providers({ children }: { children: React.ReactNode }) {
         disableTransitionOnChange
       >
         <NextTopLoader />
-        <main>{children}</main>
+        <main>{props.children}</main>
         <Toaster richColors position="bottom-right" />
       </ThemeProvider>
       <ReactQueryDevtools initialIsOpen={false} />
