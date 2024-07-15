@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { Period, Timeframe } from "@/lib/types";
 import { currentUser } from "@clerk/nextjs/server";
-import { getDaysInMonth, getYear } from "date-fns";
+import { getDaysInMonth } from "date-fns";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
@@ -95,8 +95,8 @@ async function getYearHistoryData(userId: string, year: number) {
 
     const month = result.find((row) => row.month === i);
     if (month) {
-      expense = month._sum.expense || 0;
-      income = month._sum.income || 0;
+      expense = month._sum.expense ?? 0;
+      income = month._sum.income ?? 0;
     }
 
     historyData.push({
@@ -143,8 +143,8 @@ async function getMonthHistoryData(
 
     const day = result.find((row) => row.day === i);
     if (day) {
-      expense = day._sum.expense || 0;
-      income = day._sum.income || 0;
+      expense = day._sum.expense ?? 0;
+      income = day._sum.income ?? 0;
     }
 
     historyData.push({
