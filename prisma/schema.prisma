@@ -13,62 +13,60 @@ datasource db {
   // provider = "sqlite"
   // url="file:./dev.db"
 
-//Nice schema
+  //Nice schema
   // Setup for production
- provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
 }
 
-
-
-model UserSettings{
-  userId String @id
+model UserSettings {
+  userId   String @id
   currency String
-} 
+}
 
 model Category {
-  name String
-  userId String
-  icon String
+  name      String
+  userId    String
+  icon      String
   createdAt DateTime @default(now())
-  type String @default("income")
+  type      String   @default("income")
 
-  @@unique([name, userId,type])
+  @@unique([name, userId, type])
 }
+
 model Transaction {
-  id String @id @default(uuid())
-  userId String
+  id        String   @id @default(uuid())
+  userId    String
   updatedAt DateTime @updatedAt
   createdAt DateTime @default(now())
-  
-  category String
+
+  category     String
   categoryIcon String
 
-  amount Float
+  amount      Float
   description String
-  date DateTime
-  type String @default("income")
-
+  date        DateTime
+  type        String   @default("income")
 }
 
 model MonthHistory {
-  day Int
-  month Int
-  year Int
-  userId String
-  income Float
+  day     Int
+  month   Int
+  year    Int
+  userId  String
+  income  Float
   expense Float
 
-  @@id([day,month,year,userId])
+  @@id([day, month, year, userId])
 }
 
 model YearHistory {
-  month Int
-  year Int
-  userId String
-  income Float
+  month   Int
+  year    Int
+  userId  String
+  income  Float
   expense Float
 
-  @@id([month,year,userId])
+  @@id([month, year, userId])
 }
